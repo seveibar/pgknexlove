@@ -100,7 +100,7 @@ module.exports = ({ migrationFile, seedFile, migrationSQL, seedSQL }) => {
     // override pg.destroy so we can delete the test database in test mode
     pg.destroyHooks = []
 
-    return new Proxy(pg, {
+    const proxiedPg = new Proxy(pg, {
       get: (obj, prop) => {
         if (prop === "destroy") {
           return async () => {
@@ -117,8 +117,8 @@ module.exports = ({ migrationFile, seedFile, migrationSQL, seedSQL }) => {
       },
     })
 
-    singletonDB = pg
+    singletonDB = proxiedPg
 
-    return pg
+    return proxiedPg
   }
 }
