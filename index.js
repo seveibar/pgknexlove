@@ -117,9 +117,7 @@ module.exports = ({ migrationFile, seedFile, migrationSQL, seedSQL }) => {
       },
     })
 
-    if (!testMode) {
-      singletonDB = pg
-    }
+    singletonDB = pg
 
     return pg
   }
