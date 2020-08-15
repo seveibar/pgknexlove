@@ -1,6 +1,6 @@
 # pgknexlove
 
-Don't you love postgres + knex? Now love it even more with an easy wait to create
+Don't you love postgres + knex? Now love it even more with an easy way to create
 temporary databases for unit tests, automatic singleton, an initial connection test,
 and standard environment variables defaults (POSTGRES_HOST, etc.).
 
