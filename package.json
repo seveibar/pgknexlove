@@ -1,7 +1,7 @@
 {
   "name": "pgknexlove",
   "main": "index.js",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "scripts": {
     "test": "ava tests/**.test.js"
   },
