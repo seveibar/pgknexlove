@@ -3,7 +3,7 @@
 const knex = require("knex")
 const fs = require("fs")
 
-let singletonDB
+let singletonDB = null
 
 module.exports = ({ migrationFile, seedFile, migrationSQL, seedSQL }) => {
   if (migrationFile) {
@@ -50,10 +50,10 @@ module.exports = ({ migrationFile, seedFile, migrationSQL, seedSQL }) => {
   }
 
   return async ({ seed, migrate, testMode, user } = {}) => {
+    if (singletonDB) return singletonDB
+
     testMode =
       testMode === undefined ? Boolean(process.env.USE_TEST_DB) : testMode
-
-    if (!testMode && singletonDB) return singletonDB
 
     const dbName = !testMode
       ? process.env.POSTGRES_DATABASE || process.env.POSTGRES_DB || "postgres"
@@ -104,6 +104,7 @@ module.exports = ({ migrationFile, seedFile, migrationSQL, seedSQL }) => {
       get: (obj, prop) => {
         if (prop === "destroy") {
           return async () => {
+            singletonDB = null
             for (const hook of obj.destroyHooks) {
               await hook()
             }
