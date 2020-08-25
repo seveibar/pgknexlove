@@ -5,12 +5,17 @@ const fs = require("fs")
 
 let singletonDB = null
 
-module.exports = ({ migrationFile, seedFile, migrationSQL, seedSQL }) => {
+module.exports = ({
+  migrationFile,
+  seedFile,
+  migrationSQL = "",
+  seedSQL = "",
+} = {}) => {
   if (migrationFile) {
     migrationSQL = fs.readFileSync(migrationFile).toString()
   }
   if (seedFile) {
-    seedSQL = fs.readFileSync(migrationFile).toString()
+    seedSQL = fs.readFileSync(seedFile).toString()
   }
 
   const getConnectionInfo = (database, user) => ({
