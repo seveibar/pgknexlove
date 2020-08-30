@@ -18,19 +18,22 @@ module.exports = ({
     seedSQL = fs.readFileSync(seedFile).toString()
   }
 
-  const getConnectionInfo = (database, user) => ({
-    host: process.env.POSTGRES_HOST || "localhost",
-    user:
-      user ||
-      process.env.POSTGRES_USER ||
-      process.env.POSTGRES_USERNAME ||
-      "postgres",
-    port: process.env.POSTGRES_PORT || 5432,
-    password: process.env.POSTGRES_PASS || process.env.POSTGRES_PASSWORD || "",
-    database,
-    ssl: Boolean(process.env.POSTGRES_SSL),
-    rejectUnauthorized: false,
-  })
+  const getConnectionInfo = (database, user) =>
+    process.env.POSTGRES_URI ||
+    process.env.PG_URI || {
+      host: process.env.POSTGRES_HOST || "localhost",
+      user:
+        user ||
+        process.env.POSTGRES_USER ||
+        process.env.POSTGRES_USERNAME ||
+        "postgres",
+      port: process.env.POSTGRES_PORT || 5432,
+      password:
+        process.env.POSTGRES_PASS || process.env.POSTGRES_PASSWORD || "",
+      database,
+      ssl: Boolean(process.env.POSTGRES_SSL),
+      rejectUnauthorized: false,
+    }
 
   const createDatabase = async (dbName) => {
     try {
