@@ -10,6 +10,7 @@ module.exports = ({
   seedFile,
   migrationSQL = "",
   seedSQL = "",
+  defaults = {},
 } = {}) => {
   if (migrationFile) {
     migrationSQL = fs.readFileSync(migrationFile).toString()
@@ -21,15 +22,19 @@ module.exports = ({
   const getConnectionInfo = (database, user) =>
     process.env.POSTGRES_URI ||
     process.env.PG_URI || {
-      host: process.env.POSTGRES_HOST || "localhost",
+      host: process.env.POSTGRES_HOST || defaults.host || "localhost",
       user:
         user ||
         process.env.POSTGRES_USER ||
         process.env.POSTGRES_USERNAME ||
+        defaults.user ||
         "postgres",
-      port: process.env.POSTGRES_PORT || 5432,
+      port: process.env.POSTGRES_PORT || defaults.port || 5432,
       password:
-        process.env.POSTGRES_PASS || process.env.POSTGRES_PASSWORD || "",
+        process.env.POSTGRES_PASS ||
+        process.env.POSTGRES_PASSWORD ||
+        defaults.password ||
+        "",
       database,
       ssl: Boolean(process.env.POSTGRES_SSL),
       rejectUnauthorized: false,
@@ -64,7 +69,11 @@ module.exports = ({
       testMode === undefined ? Boolean(process.env.USE_TEST_DB) : testMode
 
     const dbName = !testMode
-      ? process.env.POSTGRES_DATABASE || process.env.POSTGRES_DB || "postgres"
+      ? process.env.POSTGRES_DATABASE ||
+        process.env.POSTGRES_DB ||
+        defaults.database ||
+        defaults.databaseName ||
+        "postgres"
       : `testdb_${Math.random().toString(36).slice(7)}`
 
     if (testMode)
