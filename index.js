@@ -10,6 +10,7 @@ module.exports = ({
   seedFile,
   migrationSQL = "",
   seedSQL = "",
+  pool,
   defaults = {},
 } = {}) => {
   if (migrationFile) {
@@ -45,6 +46,7 @@ module.exports = ({
       let conn = await knex({
         client: "pg",
         connection: getConnectionInfo("postgres"),
+	pool,
       })
       await conn.raw(`CREATE DATABASE ${dbName}`)
       await conn.destroy()
@@ -56,6 +58,7 @@ module.exports = ({
       let conn = await knex({
         client: "pg",
         connection: getConnectionInfo("postgres"),
+	pool,
       })
       await conn.raw(`DROP DATABASE ${dbName}`)
       await conn.destroy()
@@ -86,6 +89,7 @@ module.exports = ({
     let pg = knex({
       client: "pg",
       connection: getConnectionInfo(dbName),
+      pool,
     })
 
     // test connection
@@ -102,7 +106,7 @@ module.exports = ({
 
     if (user) {
       await pg.destroy()
-      pg = knex({ client: "pg", connection: getConnectionInfo(dbName) })
+      pg = knex({ client: "pg", connection: getConnectionInfo(dbName), pool })
       await pg.raw(`SET ROLE ${user};`)
       // test connection
       try {
