@@ -88,9 +88,11 @@ module.exports = ({
 
     await createDatabase(dbName)
 
+    const connection = getConnectionInfo(dbName)
+
     let pg = knex({
       client: "pg",
-      connection: getConnectionInfo(dbName),
+      connection,
       pool,
     })
 
@@ -134,6 +136,8 @@ module.exports = ({
             await obj.destroy()
             if (testMode) await deleteDatabase(dbName)
           }
+        } else if (prop === "connection") {
+          return connection
         } else {
           return obj[prop]
         }
