@@ -22,7 +22,9 @@ module.exports = ({
 
   const getConnectionInfo = (database, user) =>
     process.env.POSTGRES_URI ||
-    process.env.PG_URI || {
+    process.env.PG_URI ||
+    process.env.DATABASE_URL ||
+    process.env.DATABASE_URI || {
       host: process.env.POSTGRES_HOST || defaults.host || "localhost",
       user:
         user ||
@@ -46,7 +48,7 @@ module.exports = ({
       let conn = await knex({
         client: "pg",
         connection: getConnectionInfo("postgres"),
-	pool,
+        pool,
       })
       await conn.raw(`CREATE DATABASE ${dbName}`)
       await conn.destroy()
@@ -58,7 +60,7 @@ module.exports = ({
       let conn = await knex({
         client: "pg",
         connection: getConnectionInfo("postgres"),
-	pool,
+        pool,
       })
       await conn.raw(`DROP DATABASE ${dbName}`)
       await conn.destroy()
