@@ -1,7 +1,7 @@
 {
   "name": "pgknexlove",
   "main": "index.js",
-  "version": "1.0.10",
+  "version": "1.1.0",
   "repository": "github:seveibar/pgknexlove",
   "scripts": {
     "test": "ava tests/**.test.js"
