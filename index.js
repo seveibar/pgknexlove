@@ -52,6 +52,7 @@ module.exports = ({
           defaults.password ||
           "",
         database,
+        ssl: process.env.POSTGRES_SSL ? { rejectUnauthorized: false } : false,
       }
     }
   }
