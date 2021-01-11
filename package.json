@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "knex": "^0.21.6",
-    "pg": "^8.4.1"
+    "pg": "7"
   },
   "devDependencies": {
     "@semantic-release/git": "^9.0.0",
