@@ -73,14 +73,8 @@ module.exports = ({
   const deleteDatabase = async (dbName) => {
     try {
       let conn = await knex({
-        client: "pg",
+        ...knexConfig,
         connection: getConnectionInfo("postgres"),
-        pool,
-        ssl: process.env.POSTGRES_SSL
-          ? Boolean(process.env.POSTGRES_SSL)
-          : {
-              rejectUnauthorized: false,
-            },
       })
       await conn.raw(`DROP DATABASE ${dbName}`)
       await conn.destroy()
