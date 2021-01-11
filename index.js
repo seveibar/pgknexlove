@@ -32,7 +32,9 @@ module.exports = ({
       const uriObj = parsePG(uri)
       return {
         ...uriObj,
-        ssl: { ...uriObj.ssl, rejectUnauthorized: false },
+        database: database || uriObj.database,
+        user: user || uriObj.user,
+        ssl: uriObj.ssl ? { ...uriObj.ssl, rejectUnauthorized: false } : false,
       }
     } else {
       return {
@@ -63,7 +65,7 @@ module.exports = ({
     try {
       let conn = await knex({
         ...knexConfig,
-        connection: getConnectionInfo("defaultdb"),
+        connection: getConnectionInfo("postgres"),
       })
       await conn.raw(`CREATE DATABASE ${dbName}`)
       await conn.destroy()
