@@ -39,8 +39,11 @@ module.exports = ({
         defaults.password ||
         "",
       database,
-      ssl: Boolean(process.env.POSTGRES_SSL),
-      rejectUnauthorized: false,
+      ssl: process.env.POSTGRES_SSL 
+          ? Boolean(process.env.POSTGRES_SSL)
+          : {                                                                                       
+              rejectUnauthorized: false,
+            },
     }
 
   const createDatabase = async (dbName) => {
