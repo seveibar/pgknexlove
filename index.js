@@ -39,11 +39,6 @@ module.exports = ({
         defaults.password ||
         "",
       database,
-      ssl: process.env.POSTGRES_SSL 
-          ? Boolean(process.env.POSTGRES_SSL)
-          : {                                                                                       
-              rejectUnauthorized: false,
-            },
     }
 
   const createDatabase = async (dbName) => {
@@ -52,6 +47,11 @@ module.exports = ({
         client: "pg",
         connection: getConnectionInfo("postgres"),
         pool,
+        ssl: process.env.POSTGRES_SSL
+          ? Boolean(process.env.POSTGRES_SSL)
+          : {
+              rejectUnauthorized: false,
+            },
       })
       await conn.raw(`CREATE DATABASE ${dbName}`)
       await conn.destroy()
@@ -64,6 +64,11 @@ module.exports = ({
         client: "pg",
         connection: getConnectionInfo("postgres"),
         pool,
+        ssl: process.env.POSTGRES_SSL
+          ? Boolean(process.env.POSTGRES_SSL)
+          : {
+              rejectUnauthorized: false,
+            },
       })
       await conn.raw(`DROP DATABASE ${dbName}`)
       await conn.destroy()
@@ -97,6 +102,11 @@ module.exports = ({
       client: "pg",
       connection,
       pool,
+      ssl: process.env.POSTGRES_SSL
+        ? Boolean(process.env.POSTGRES_SSL)
+        : {
+            rejectUnauthorized: false,
+          },
     })
 
     // test connection
@@ -113,7 +123,17 @@ module.exports = ({
 
     if (user) {
       await pg.destroy()
-      pg = knex({ client: "pg", connection: getConnectionInfo(dbName), pool })
+      pg = knex({
+        client: "pg",
+        connection: getConnectionInfo(dbName),
+        pool,
+
+        ssl: process.env.POSTGRES_SSL
+          ? Boolean(process.env.POSTGRES_SSL)
+          : {
+              rejectUnauthorized: false,
+            },
+      })
       await pg.raw(`SET ROLE ${user};`)
       // test connection
       try {
