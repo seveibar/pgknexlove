@@ -2,6 +2,7 @@
 
 const knex = require("knex")
 const fs = require("fs")
+const { parse: parsePG } = require("pg-connection-string")
 
 let singletonDB = null
 
@@ -20,43 +21,49 @@ module.exports = ({
     seedSQL = fs.readFileSync(seedFile).toString()
   }
 
-  const getConnectionInfo = (database, user) =>
-    process.env.POSTGRES_URI ||
-    process.env.PG_URI ||
-    process.env.DATABASE_URL ||
-    process.env.DATABASE_URI || {
-      host: process.env.POSTGRES_HOST || defaults.host || "localhost",
-      user:
-        user ||
-        process.env.POSTGRES_USER ||
-        process.env.POSTGRES_USERNAME ||
-        defaults.user ||
-        "postgres",
-      port: process.env.POSTGRES_PORT || defaults.port || 5432,
-      password:
-        process.env.POSTGRES_PASS ||
-        process.env.POSTGRES_PASSWORD ||
-        defaults.password ||
-        "",
-      database,
-      ssl: process.env.POSTGRES_SSL
-        ? Boolean(process.env.POSTGRES_SSL)
-        : {
-            rejectUnauthorized: false,
-          },
+  const getConnectionInfo = (database, user) => {
+    const uri =
+      process.env.POSTGRES_URI ||
+      process.env.PG_URI ||
+      process.env.DATABASE_URL ||
+      process.env.DATABASE_URI
+
+    if (uri) {
+      const uriObj = parsePG(uri)
+      return {
+        ...uriObj,
+        ssl: { ...uriObj.ssl, rejectUnauthorized: false },
+      }
+    } else {
+      return {
+        host: process.env.POSTGRES_HOST || defaults.host || "localhost",
+        user:
+          user ||
+          process.env.POSTGRES_USER ||
+          process.env.POSTGRES_USERNAME ||
+          defaults.user ||
+          "postgres",
+        port: process.env.POSTGRES_PORT || defaults.port || 5432,
+        password:
+          process.env.POSTGRES_PASS ||
+          process.env.POSTGRES_PASSWORD ||
+          defaults.password ||
+          "",
+        database,
+      }
     }
+  }
+
+  const knexConfig = {
+    client: "pg",
+    pool,
+  }
 
   const createDatabase = async (dbName) => {
     try {
       let conn = await knex({
-        client: "pg",
-        connection: getConnectionInfo("postgres"),
-        pool,
-        ssl: process.env.POSTGRES_SSL
-          ? Boolean(process.env.POSTGRES_SSL)
-          : {
-              rejectUnauthorized: false,
-            },
+        ...knexConfig,
+        connection: getConnectionInfo("defaultdb"),
       })
       await conn.raw(`CREATE DATABASE ${dbName}`)
       await conn.destroy()
@@ -104,14 +111,8 @@ module.exports = ({
     const connection = getConnectionInfo(dbName)
 
     let pg = knex({
-      client: "pg",
+      ...knexConfig,
       connection,
-      pool,
-      ssl: process.env.POSTGRES_SSL
-        ? Boolean(process.env.POSTGRES_SSL)
-        : {
-            rejectUnauthorized: false,
-          },
     })
 
     // test connection
@@ -129,15 +130,8 @@ module.exports = ({
     if (user) {
       await pg.destroy()
       pg = knex({
-        client: "pg",
+        ...knexConfig,
         connection: getConnectionInfo(dbName),
-        pool,
-
-        ssl: process.env.POSTGRES_SSL
-          ? Boolean(process.env.POSTGRES_SSL)
-          : {
-              rejectUnauthorized: false,
-            },
       })
       await pg.raw(`SET ROLE ${user};`)
       // test connection
