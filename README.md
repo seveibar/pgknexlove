@@ -72,8 +72,6 @@ const getDB = require("pgknexlove")({
 
 The following environment variables are used (basically standard postgres env variables)
 
-> TODO we should also support POSTGRES_URI, POSTGRES_URL (somebody do it!)
-
 | Var Name                         | Description                     |
 | -------------------------------- | ------------------------------- |
 | POSTGRES_HOST                    | Postgres Host                   |
@@ -81,5 +79,6 @@ The following environment variables are used (basically standard postgres env va
 | POSTGRES_DATABASE, POSTGRES_DB   | Postgres Database               |
 | POSTGRES_USER, POSTGRES_USERNAME | Postgres User                   |
 | POSTGRES_PORT                    | Postgres Port                   |
+| POSTGRES_URI, POSTGRES_URL       | Postgres URI `postgresql://...` |
 | POSTGRES_SSL                     | If set, true                    |
 | USE_TEST_DB                      | `testMode` will default to true |
