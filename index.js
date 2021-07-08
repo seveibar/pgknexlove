@@ -51,7 +51,12 @@ module.exports = ({
           process.env.POSTGRES_PASSWORD ||
           defaults.password ||
           "",
-        database,
+        database: database ||
+          process.env.POSTGRES_DATABASE ||
+          process.env.POSTGRES_DB ||
+          defaults.database ||
+          defaults.databaseName ||
+          "postgres",
         ssl: process.env.POSTGRES_SSL ? { rejectUnauthorized: false } : false,
       }
     }
@@ -84,7 +89,7 @@ module.exports = ({
     } catch (e) {}
   }
 
-  return async ({ seed, migrate, testMode, user } = {}) => {
+  const getDB = async ({ seed, migrate, testMode, user } = {}) => {
     if (singletonDB) return singletonDB
 
     testMode =
@@ -167,4 +172,8 @@ module.exports = ({
 
     return proxiedPg
   }
+
+  getDB.getConnectionInfo = getConnectionInfo
+
+  return getDB
 }
