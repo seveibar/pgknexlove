@@ -2,7 +2,7 @@
   "name": "pgknexlove",
   "main": "index.js",
   "version": "1.1.0",
-  "repository": "github:seveibar/pgknexlove",
+  "repository": "https://github.com/seveibar/pgweb-node",
   "scripts": {
     "test": "ava tests/**.test.js"
   },
