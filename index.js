@@ -6,7 +6,7 @@ const { parse: parsePG } = require("pg-connection-string")
 
 let singletonDB = null
 
-module.exports = ({
+const createDatabaseGetter = ({
   migrationFile,
   seedFile,
   migrationSQL = "",
@@ -51,7 +51,8 @@ module.exports = ({
           process.env.POSTGRES_PASSWORD ||
           defaults.password ||
           "",
-        database: database ||
+        database:
+          database ||
           process.env.POSTGRES_DATABASE ||
           process.env.POSTGRES_DB ||
           defaults.database ||
@@ -177,3 +178,6 @@ module.exports = ({
 
   return getDB
 }
+
+module.exports = createDatabaseGetter
+module.exports.default = createDatabaseGetter()
