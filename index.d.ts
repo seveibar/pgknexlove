@@ -1,6 +1,6 @@
 import { Knex } from "knex"
 
-export declare const Knex = Knex
+export declare type Knex = Knex
 
 type DatabaseGetter = {
   getConnectionInfo: (
