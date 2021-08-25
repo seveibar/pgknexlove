@@ -1,6 +1,6 @@
-import { Knex } from "knex"
+import { Knex as KnexJS } from "knex"
 
-export declare type Knex = Knex
+export declare type Knex = KnexJS
 
 type DatabaseGetter = {
   getConnectionInfo: (
