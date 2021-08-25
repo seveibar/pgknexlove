@@ -22,6 +22,12 @@ const createDatabaseGetter = ({
   }
 
   const getConnectionInfo = (database, user) => {
+    if (singletonDB)
+      return {
+        ...singletonDB.connection,
+        database: database || singleton.connection.database,
+        user: user || singleton.connection.user,
+      }
     const uri =
       process.env.POSTGRES_URI ||
       process.env.PG_URI ||
