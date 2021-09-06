@@ -14,10 +14,10 @@ npm install pgknexlove
 ```
 
 ```javascript
-const getDB = require("pgknexlove")()
+const pgknexlove = require("pgknexlove")
 
 module.exports = async (req, res) => {
-  const db = await getDB()
+  const db = await pgknexlove.default()
 
   const myUsers = await db("users").select("first_name")
 
@@ -28,16 +28,38 @@ module.exports = async (req, res) => {
 }
 ```
 
+## Setting Defaults
+
+```ts
+import pgknexlove from "pgknexlove"
+
+const getDB = pgknexlove({
+  defaults: { database: "products" },
+})
+
+async function main() {
+  const db = await getDB()
+
+  const myProducts = await db("product").select("name")
+}
+```
+
 ## Usage in Unit Tests
 
 `testMode: true` creates a temporary database. This allows you to run database
 tests in parallel.
 
 ```javascript
-const pgknexlove = require("pgknexlove")
+const getDB = require("pgknexlove")({
+  // Your migration file will automatically be run on the test database (optional)
+  migrationFile: require.resolve("./migrate.sql"),
+
+  // A file that will seed the database, great for quick testing (optional)
+  seedFile: require.resolve("./seed.sql"),
+})
 
 test("some test that uses the database", async (t) => {
-  const db = await pgknexlove.default({ testMode: true })
+  const db = await getDB({ testMode: true, migrate: true, seed: true })
 
   // a test database was created and migrate with a random name, do whatever you
   // want!
