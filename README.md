@@ -71,6 +71,28 @@ test("some test that uses the database", async (t) => {
 
 ## getConnectionInfo & getConnectionString
 
+You can use these methods to compute what database should be used from the
+environment and/or your defaults.
+
+> NOTE: The defaults are overridden by the environment. The environment can
+> be overriden by arguments passed into the `GetDatabase` function (e.g.
+> `pgknexlove.default` or what's returned by `pgknexlove()`)
+
+```ts
+import pgknexlove from "pgknexlove"
+
+pgknexlove.default.getConnectionInfo()
+// { host: "localhost", "password": "", port: 5432, database: "postgres", user: "postgres" }
+
+pgknexlove.default.getConnectionString()
+// postgresql://postgres:@localhost:5432/postgres
+
+let modifiedConn = pgknexlove({
+  defaults: { database: "myproduct" },
+}).getConnectionInfo()
+// { host: "localhost", "password": "", port: 5432, database: "myproduct", user: "postgres" }
+```
+
 ## Environment Variables
 
 The following environment variables are used (basically standard postgres env variables)
