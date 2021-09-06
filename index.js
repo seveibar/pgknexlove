@@ -69,6 +69,12 @@ const createDatabaseGetter = ({
     }
   }
 
+  const getConnectionString = (...args) => {
+    const { host, password, port, database, user } = getConnectionInfo(...args)
+    // TODO sslmode?
+    return `postgresql://${user}:${password}@${host}:${port}/${database}`
+  }
+
   const knexConfig = {
     client: "pg",
     pool,
@@ -181,6 +187,7 @@ const createDatabaseGetter = ({
   }
 
   getDB.getConnectionInfo = getConnectionInfo
+  getDB.getConnectionString = getConnectionString
 
   return getDB
 }

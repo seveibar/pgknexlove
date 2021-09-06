@@ -12,11 +12,17 @@ test("be able to connect with a URI connection string", async (t) => {
 
   const [id] = await db("person").insert({ name: "jerry" }).returning("id")
 
-  t.assert(id === 1)
+  t.is(id, 1)
 
   const jerry = await db("person").first()
 
-  t.assert(jerry.name === "jerry")
+  t.is(jerry.name, "jerry")
 
   await db.destroy()
+})
+
+test("be able to return a pg connection string", async (t) => {
+  const dbString = pgknexlove.default.getConnectionString()
+
+  t.is(dbString, "postgresql://postgres:@localhost:5432/postgres")
 })

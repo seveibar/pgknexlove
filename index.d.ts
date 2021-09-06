@@ -14,6 +14,7 @@ type DatabaseGetter = {
     database: string
     ssl: boolean
   }
+  getConnectionString: (database?: string, user?: string) => string
   (params?: {
     seed?: boolean
     migrate?: boolean

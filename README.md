@@ -30,17 +30,14 @@ module.exports = async (req, res) => {
 
 ## Usage in Unit Tests
 
-```javascript
-const getDB = require("pgknexlove")({
-  // Your migration file will automatically be run on the test database (optional)
-  migrationFile: require.resolve("./migrate.sql"),
+`testMode: true` creates a temporary database. This allows you to run database
+tests in parallel.
 
-  // A file that will seed the database, great for quick testing (optional)
-  seedFile: require.resolve("./seed.sql"),
-})
+```javascript
+const pgknexlove = require("pgknexlove")
 
 test("some test that uses the database", async (t) => {
-  const db = await getDB({ testMode: true, migrate: true, seed: true })
+  const db = await pgknexlove.default({ testMode: true })
 
   // a test database was created and migrate with a random name, do whatever you
   // want!
@@ -50,23 +47,7 @@ test("some test that uses the database", async (t) => {
 })
 ```
 
-## Usage with Babel Macros
-
-Sometimes it's not convenient to `require.resolve` to your SQL files. Babel
-macros to the rescue!
-
-```javascript
-// Make sure to install the proper plugins
-// npm install babel-plugin-macros raw.macro
-
-// Your .babelrc should have: { "plugins": ["macros"] }
-const raw = require("raw.macro")
-
-const getDB = require("pgknexlove")({
-  migrationSQL: raw("./migrate.sql"),
-  seedSQL: raw("./seed.sql"),
-})
-```
+## getConnectionInfo & getConnectionString
 
 ## Environment Variables
 
