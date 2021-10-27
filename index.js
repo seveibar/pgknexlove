@@ -3,6 +3,7 @@
 const knex = require("knex")
 const fs = require("fs")
 const { parse: parsePG } = require("pg-connection-string")
+const debug = require("debug")("pgknexlove")
 
 let singletonDB = null
 
@@ -117,9 +118,7 @@ const createDatabaseGetter = ({
       : `testdb_${Math.random().toString(36).slice(7)}`
 
     if (testMode)
-      console.log(
-        `\n---\nUsing Test DB: ${dbName}, User: ${user || "none"}\n---`
-      )
+      debug(`\n---\nUsing Test DB: ${dbName}, User: ${user || "none"}\n---`)
 
     await createDatabase(dbName)
 
