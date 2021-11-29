@@ -107,3 +107,7 @@ The following environment variables are used (basically standard postgres env va
 | POSTGRES_URI, POSTGRES_URL       | Postgres URI `postgresql://...` |
 | POSTGRES_SSL                     | If set, true                    |
 | USE_TEST_DB                      | `testMode` will default to true |
+
+## Viewing Debug Logs
+
+Set `DEBUG=pgknexlove` to see debug logs.
