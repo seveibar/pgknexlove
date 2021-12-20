@@ -30,7 +30,7 @@ type GetDatabaseGetter = {
     seedFile?: string
     migrationSQL?: string
     seedSQL?: string
-    pool?: number
+    pool?: { min: number; max: number }
     defaults?: any
   }): DatabaseGetter
 }
