@@ -104,7 +104,7 @@ const createDatabaseGetter = ({
   }
 
   const getDB = async ({ seed, migrate, testMode, user } = {}) => {
-    if (singletonDB) return singletonDB
+    if (singletonDB && !testMode) return singletonDB
 
     testMode =
       testMode === undefined ? Boolean(process.env.USE_TEST_DB) : testMode
@@ -180,7 +180,9 @@ const createDatabaseGetter = ({
       },
     })
 
-    singletonDB = proxiedPg
+    if (!testMode) {
+      singletonDB = proxiedPg
+    }
 
     return proxiedPg
   }
