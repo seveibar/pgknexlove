@@ -36,5 +36,6 @@ type GetDatabaseGetter = {
 }
 
 export declare const getDatabaseGetter: GetDatabaseGetter
+export declare const knex: Knex
 
 export default getDatabaseGetter

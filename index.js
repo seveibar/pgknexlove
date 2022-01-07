@@ -195,3 +195,4 @@ const createDatabaseGetter = ({
 
 module.exports = createDatabaseGetter
 module.exports.default = createDatabaseGetter()
+module.exports.knex = knex
